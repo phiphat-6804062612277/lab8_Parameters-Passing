@@ -1,6 +1,7 @@
 #include <stdio.h>
 int checkscore(char std[]);
 char keys[10]={'D','B','D','C','C','D','A','E','A','D'};
+int no1 = 0;
 int main() {
     int i,j;
     char ans[8][10]={
@@ -19,6 +20,8 @@ int main() {
         }
     	printf("std %d => %d\n", (i+1), checkscore(s));
     }
+    printf("No.1 correct = %d \n",no1);
+
 }
 int checkscore(char std[]){
     int i,poi=0;
@@ -26,6 +29,9 @@ int checkscore(char std[]){
         if(std[i] == keys[i]){
             poi += 1;
         }
+    }
+    if(std[0] == keys[0]){
+        no1 += 1;
     }
     return poi;
 }

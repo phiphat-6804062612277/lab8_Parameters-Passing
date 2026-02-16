@@ -1,100 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-int random1to100();
-void printAr(int numAr[],int numArSize);
-int checkNum(int numAr[],int numArSize);
-int searchNum(int numAr[],int numArSize,int target);
-void sort(int sortAr[],int numArSize);
-int binarySearch(int ar[], int n, int target);
+int random(int arr[]);
+int chk(int tar , int arr[]);
+void sort(int arr[]);
 void swap(int *x , int *y);
 
-int main() {
-    int N,i;
-    int A[100];
-    scanf("%d",&N);
-    if (N>100) 
-    N=100;
+int main(){
+    int scoAr[4];
     srand(time(NULL));
-    for (i=0;i<N;i++)
-        A[i] = checkNum(A,i);
-       
-    printf("\n********\n");
-    printAr(A,N);
-    
+    for (int i = 0 ;i < 4;i++){
+        scoAr[i] = random(scoAr);
+    }
+    printf("\n-----------\n");
+    for (int i = 0 ;i < 4;i++){
+        printf("%d ",scoAr[i]);
+    }
+    sort(scoAr);    
+    printf("\n-----------\n");
+    printf("3 best score from 4 = ");
+    for (int i = 0 ;i < 3;i++){
+        printf("%d ",scoAr[i+1]);
+    }
+
     return 0;
 }
-void printAr(int numAr[],int numArSize) {
+int random(int arr[]){
+    int random,loopsame=1;
+    while(loopsame){
+        random = (rand() % 100) + 1; 
+        printf("%d ",random);
+        if(chk(random,arr)){ //ถ้าไม่ซ้ำ == 1
+            loopsame = 0;
+        }
+    }// ถ้าซ้ำ loop
+    return random;
+}
+int chk(int tar , int arr[]){
     int i;
-    for (i=0;i<numArSize;i++)
-        printf("%d ",numAr[i]);
-} 
-
-int checkNum(int numAr[],int numArSize) {
-    int rnum;
-    rnum=random1to100();
-    while (searchNum(numAr,numArSize,rnum)) {
-        rnum=random1to100();
-    }
-    return rnum;
-}
-int random1to100() {
-    int random_num = (rand() % 100) + 1;
-    printf("%d ", random_num);
-    return random_num;
-}
-
-int searchNum(int numAr[],int numArSize, int target) {
-        //sol1* use Linear search
-        //sol2 use binary search  see.Lab6no9-10 
-        int i,found=0,newar[100];
-        for (i=0;i<=numArSize;i++){
-        // sol1 
-            // if(target == numAr[i]){
-            //     found = 1;
-            // }
-        // sol2
-            newar[i] = numAr[i];
-        }
-        sort(newar,numArSize);
-        found = binarySearch(newar,numArSize,target);
-        return found;
-}
-int binarySearch(int ar[], int n, int target){
-    int low = 0;
-    int high = n - 1;
-    while (low <= high){
-        int mid = low + (high - low) / 2;
-        if (target == ar[mid]){
-            return 1;
-        }
-        if (target > ar[mid]){
-            low = mid + 1;
-        }
-        else {
-            high = mid - 1; 
+    for (i = 0 ;i < 4;i++){
+        if (tar == arr[i]){
+            return 0; // ถ้าซ้ำ
         }
     }
-    return 0;
+    return 1; // ถ้าไม่ซ้ำ
 }
-void sort(int sortAr[],int numArSize){
-    int i,j,tt=0;
-    for (i = 0 ;i<numArSize - 1;i++){
-        tt = 1;
-        for (j = 0;j < numArSize - i - 1;j++){
-            if (sortAr[j] > sortAr[j + 1]){
-                swap(&sortAr[j], &sortAr[j + 1]);
-                tt = 0;
+void sort(int arr[]){
+    int i,j;
+    for (i = 0;i<3;i++){
+        for (j=0;j<3-i;j++){
+            if (arr[j] > arr[j+1]){
+                swap(&arr[j],&arr[j+1]);
             }
-        }
-        if (tt == 1){
-            break;
         }
     }
 }
 void swap(int *x , int *y){
-    int te;
-    te = *x;
+    int te = *x;
     *x = *y;
     *y = te;
 }

@@ -1,53 +1,100 @@
 #include <stdio.h>
-int checkscore(char std[]);
-int scanmin(int ar[]);
-char keys[10]={'D','B','D','C','C','D','A','E','A','D'};
-int no1 = 0;
-int scoNO[10];
+#include <stdlib.h>
+#include <time.h>
+int random1to100();
+void printAr(int numAr[],int numArSize);
+int checkNum(int numAr[],int numArSize);
+int searchNum(int numAr[],int numArSize,int target);
+void sort(int sortAr[],int numArSize);
+int binarySearch(int ar[], int n, int target);
+void swap(int *x , int *y);
+
 int main() {
-    int i,j,minNO;
-    char ans[8][10]={
-        	{'A','B','A','C','C','D','E','E','A','D'},//7
-            {'D','B','A','B','C','A','E','E','A','D'},//6
-            {'E','D','D','A','C','B','E','E','A','D'},//5
-            {'C','B','A','E','D','C','E','E','A','D'},//4
-            {'A','B','D','C','C','D','E','E','A','D'},//8
-            {'B','B','E','C','C','D','E','E','A','D'},//7
-            {'B','B','A','C','C','D','E','E','A','D'},//7
-            {'E','B','E','C','C','D','E','E','A','D'}};//7
-    char s[10];
-    for(i = 0;i<8;i++){
-        for(j = 0;j<10;j++){
-            s[j] = ans[i][j];
-        }
-    	printf("std %d => %d\n", (i+1), checkscore(s));
-    }
-    printf("No.1 correct = %d \n",no1);
-    minNO = scanmin(scoNO);
-    printf("show no. of hardest no.%d",minNO);
+    int N,i;
+    int A[100];
+    scanf("%d",&N);
+    if (N>100) 
+    N=100;
+    srand(time(NULL));
+    for (i=0;i<N;i++)
+        A[i] = checkNum(A,i);
+       
+    printf("\n********\n");
+    printAr(A,N);
+    
+    return 0;
 }
-int checkscore(char std[]){
-    int i,poi=0;
-    for(i=0;i<10;i++){
-        if(std[i] == keys[i]){
-            poi += 1;
-            scoNO[i] += 1;
-        }
+void printAr(int numAr[],int numArSize) {
+    int i;
+    for (i=0;i<numArSize;i++)
+        printf("%d ",numAr[i]);
+} 
+
+int checkNum(int numAr[],int numArSize) {
+    int rnum;
+    rnum=random1to100();
+    while (searchNum(numAr,numArSize,rnum)) {
+        rnum=random1to100();
     }
-    if(std[0] == keys[0]){
-        no1 += 1;
-    }
-    return poi;
+    return rnum;
 }
-int scanmin(int ar[]){
-    int min,numind;
-    min = ar[0];
-    numind = 1;
-    for(int i = 0;i<10;i++){
-        if(min > ar[i]){
-            min = ar[i];
-            numind = i+1;
+int random1to100() {
+    int random_num = (rand() % 100) + 1;
+    printf("%d ", random_num);
+    return random_num;
+}
+
+int searchNum(int numAr[],int numArSize, int target) {
+        //sol1* use Linear search
+        //sol2 use binary search  see.Lab6no9-10 
+        int i,found=0,newar[100];
+        for (i=0;i<=numArSize;i++){
+        // sol1 
+            // if(target == numAr[i]){
+            //     found = 1;
+            // }
+        // sol2
+            newar[i] = numAr[i];
+        }
+        sort(newar,numArSize);
+        found = binarySearch(newar,numArSize,target);
+        return found;
+}
+int binarySearch(int ar[], int n, int target){
+    int low = 0;
+    int high = n - 1;
+    while (low <= high){
+        int mid = low + (high - low) / 2;
+        if (target == ar[mid]){
+            return 1;
+        }
+        if (target > ar[mid]){
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1; 
         }
     }
-    return numind;
+    return 0;
+}
+void sort(int sortAr[],int numArSize){
+    int i,j,tt=0;
+    for (i = 0 ;i<numArSize - 1;i++){
+        tt = 1;
+        for (j = 0;j < numArSize - i - 1;j++){
+            if (sortAr[j] > sortAr[j + 1]){
+                swap(&sortAr[j], &sortAr[j + 1]);
+                tt = 0;
+            }
+        }
+        if (tt == 1){
+            break;
+        }
+    }
+}
+void swap(int *x , int *y){
+    int te;
+    te = *x;
+    *x = *y;
+    *y = te;
 }
